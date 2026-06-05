@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBLI Search Engine</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+        }
+        .search-container {
+            text-align: center;
+            width: 100%;
+            max-width: 580px;
+            padding: 20px;
+        }
+        .logo {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+        }
+        .logo span:nth-child(1) { color: #4285F4; } /* K */
+        .logo span:nth-child(2) { color: #EA4335; } /* B */
+        .logo span:nth-child(3) { color: #FBBC05; } /* L */
+        .logo span:nth-child(4) { color: #4285F4; } /* I */
+        .logo span:nth-child(5) { color: #34A853; } /* - */
+        .logo span:nth-child(6) { color: #EA4335; } /* S */
+        .logo span:nth-child(7) { color: #4285F4; } /* e */
+        .logo span:nth-child(8) { color: #34A853; } /* a */
+        .logo span:nth-child(9) { color: #FBBC05; } /* r */
+        .logo span:nth-child(10) { color: #EA4335; } /* c */
+        .logo span:nth-child(11) { color: #4285F4; } /* h */
+
+        .search-box {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            outline: none;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s;
+        }
+        .search-box:focus {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            border-color: rgba(223,225,229,0);
+        }
+        .btn-container {
+            margin-top: 25px;
+        }
+        .btn-search {
+            padding: 10px 18px;
+            font-size: 14px;
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            cursor: pointer;
+            margin: 0 4px;
+        }
+        .btn-search:hover {
+            border: 1px solid #dadce0;
+            color: #202124;
+            background-color: #f1f3f4;
+        }
+        .error-msg {
+            color: #EA4335;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <!-- Logo Berwarna ala Google -->
+        <div class="logo">
+            <span>K</span><span>B</span><span>L</span><span>I</span><span>-</span><span>S</span><span>e</span><span>a</span><span>r</span><span>c</span><span>h</span>
+        </div>
+        
+        <!-- Form Pencarian mengarah ke /search -->
+        <form action="/search" method="POST">
+            <input type="text" name="query" class="search-box" autocomplete="off" placeholder="Ketik deskripsi atau rencana bisnis Anda di sini..." required>
+            <div class="btn-container">
+                <button type="submit" class="btn-search">Penelusuran KBLI</button>
+            </div>
+        </form>
+
+        {% if error %}
+            <p class="error-msg">{{ error }}</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

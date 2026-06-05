@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBLI {{ kbli.kode }} - {{ kbli.judul }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            background-color: #f8f9fa;
+        }
+        .detail-container {
+            max-width: 800px;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 8px;
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+        .badge-kode {
+            background-color: #4285F4;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        h1 {
+            color: #202124;
+            font-size: 28px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1a73e8;
+            margin-top: 25px;
+            margin-bottom: 5px;
+        }
+        .content-box {
+            background-color: #f1f3f4;
+            padding: 15px;
+            border-radius: 6px;
+            color: #3c4043;
+            font-size: 15px;
+            text-align: justify;
+        }
+        .back-nav {
+            margin-top: 30px;
+        }
+        .back-nav a {
+            color: #1a0dab;
+            text-decoration: none;
+            font-size: 15px;
+        }
+        .back-nav a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="detail-container">
+        <span class="badge-kode">KBLI KODE {{ kbli.kode }}</span>
+        <h1>{{ kbli.judul }}</h1>
+        
+        <div class="section-title">Deskripsi Cakupan Lapangan Usaha:</div>
+        <div class="content-box">
+            {{ kbli.deskripsi }}
+        </div>
+
+        <div class="section-title">Data Pengindeksan Sistem (Dokumen Stemmed):</div>
+        <div style="font-size: 13px; color: #5f6368; font-style: italic;">
+            {{ kbli.clean_features }}
+        </div>
+
+        <div class="back-nav">
+            <a href="javascript:history.back()">← Kembali ke Hasil Penelusuran</a>
+        </div>
+    </div>
+
+</body>
+</html>
