@@ -66,17 +66,12 @@
 <body>
 
     <div class="detail-container">
-        <span class="badge-kode">KBLI KODE {{ kbli.kode }}</span>
+        <span class="badge-kode">KBLI KODE {{ kbli.kode.zfill(5) }}</span>
         <h1>{{ kbli.judul }}</h1>
         
         <div class="section-title">Deskripsi Cakupan Lapangan Usaha:</div>
         <div class="content-box">
             {{ kbli.deskripsi }}
-        </div>
-
-        <div class="section-title">Data Pengindeksan Sistem (Dokumen Stemmed):</div>
-        <div style="font-size: 13px; color: #5f6368; font-style: italic;">
-            {{ kbli.clean_features }}
         </div>
 
         <div class="back-nav">
