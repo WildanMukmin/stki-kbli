@@ -16,20 +16,66 @@
             align-items: center;
             border-bottom: 1px solid #ebebeb;
             padding-bottom: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .logo-small {
             font-size: 24px;
             font-weight: bold;
             text-decoration: none;
-            margin-right: 20px;
+            margin-right: 30px;
+            white-space: nowrap;
         }
+        
         .logo-small span:nth-child(1) { color: #4285F4; }
         .logo-small span:nth-child(2) { color: #EA4335; }
         .logo-small span:nth-child(3) { color: #FBBC05; }
         .logo-small span:nth-child(4) { color: #4285F4; }
         .logo-small span:nth-child(5) { color: #34A853; }
         
+        .search-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 16px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px 0 0 24px;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            border: 1px solid #dfe1e5;
+            border-left: none;
+            border-radius: 0 24px 24px 0;
+            cursor: pointer;
+            color: #4285F4;
+            font-weight: bold;
+        }
+
+        .search-button:hover {
+            background-color: #e8eaed;
+        }
+
+        .query-text {
+            font-size: 16px; 
+            color: #202124;
+            margin-bottom: 8px;
+        }
+
         .stats-text {
             color: #70757a;
             font-size: 14px;
@@ -77,9 +123,15 @@
         <a href="/" class="logo-small">
             <span>K</span><span>B</span><span>L</span><span>I</span><span>-</span><span>S</span>
         </a>
-        <div style="font-size: 16px; color: #202124;">
-            Hasil untuk: <strong>"{{ query }}"</strong>
-        </div>
+        
+        <form action="/search" method="POST" class="search-form">
+            <input type="text" name="query" class="search-input" value="{{ query }}" autocomplete="off" placeholder="Ketik Kode KBLI atau deskripsi..." required>
+            <button type="submit" class="search-button">Cari</button>
+        </form>
+    </div>
+
+    <div class="query-text">
+        Hasil untuk: <strong>"{{ query }}"</strong>
     </div>
 
     <div class="stats-text">
