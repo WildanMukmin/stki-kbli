@@ -1,102 +1,156 @@
 from flask import Flask, render_template, request, abort
 import pandas as pd
+import pickle
+import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+from Sastrawi.StopWordRemover.StopWordRemoverFactory import StopWordRemoverFactory
 import re
 
 app = Flask(__name__)
 
-# 1. Load Data Asli dan Data Preprocessed
-print("Memuat dataset...")
-df_asli = pd.read_csv('dataset.csv')
-df_clean = pd.read_csv('kbli_preprocessed.csv') # Pastikan file ini ada di folder yang sama
+# ==============================================================
+# 1. Load Dataset
+# ==============================================================
+print("Memuat dataset KBLI...")
+df = pd.read_csv('dataset.csv', dtype={'kode': str})
+df['kode'] = df['kode'].astype(str).str.zfill(5) # formatnya 5 digit string
 
-# Pastikan kolom kode bertipe string agar tidak error saat digabung dan masuk ke URL
-df_asli['kode'] = df_asli['kode'].astype(str).str.zfill(5)
-df_clean['kode'] = df_clean['kode'].astype(str).str.zfill(5)
+# Pastikan kolom 'kbli' ada (nama judul di notebook)
+if 'kbli' not in df.columns and 'judul' in df.columns:
+    df.rename(columns={'judul': 'kbli'}, inplace=True)
 
-# Gabungkan kedua dataframe berdasarkan kolom 'kode'
-# Hasilnya df akan memiliki 4 kolom: kode, judul, deskripsi, keterangan_bersih
-df = pd.merge(df_asli, df_clean, on='kode', how='inner')
+# ==============================================================
+# 2. Inisialisasi Preprocessing (sesuai notebook)
+# ==============================================================
+factory_stem = StemmerFactory()
+stemmer = factory_stem.create_stemmer()
 
-# Hindari error jika ada baris kosong pada data hasil preprocessing
-df['keterangan_bersih'] = df['keterangan_bersih'].fillna('')
+factory_stop = StopWordRemoverFactory()
+stopword_remover = factory_stop.create_stop_word_remover()
 
-# 2. Inisialisasi Sastrawi Stemmer (HANYA untuk memproses query input pengguna)
-factory = StemmerFactory()
-stemmer = factory.create_stemmer()
+def preprocess_text(teks):
+    """Preprocessing identik dengan notebook Colab."""
+    teks = str(teks).lower()
+    teks = re.sub(r'[^a-z\s]', ' ', teks)
+    teks = re.sub(r'\s+', ' ', teks).strip()
+    teks = stopword_remover.remove(teks)
+    teks = stemmer.stem(teks)
+    return teks
 
-def preprocess_query(text):
-    text = str(text).lower()
-    text = re.sub(r'[^a-z0-9\s]', ' ', text)
-    return stemmer.stem(text)
+# ==============================================================
+# 3. Load atau Build TF-IDF (cache ke .pkl agar startup cepat)
+# ==============================================================
+TFIDF_MATRIX_PATH = 'tfidf_matrix.pkl'
+TFIDF_VECTORIZER_PATH = 'tfidf_vectorizer.pkl'
+CLEAN_COL = 'keterangan_bersih'
 
-# 3. Fit Model TF-IDF langsung menggunakan kolom data yang sudah dipreproses
-print("Membuat model TF-IDF dari data keterangan_bersih...")
-vectorizer = TfidfVectorizer()
-tfidf_matrix_kbli = vectorizer.fit_transform(df['keterangan_bersih'])
-print("Dataset dan model siap!")
+# ==============================================================
+# Load Model TF-IDF
+# ==============================================================
+print("Memuat model TF-IDF...")
 
-# --- ROUTING FLASK ---
+with open('tfidf_vectorizer.pkl', 'rb') as f:
+    vectorizer = pickle.load(f)
 
-# Page 1: Search Box (Google Home)
+with open('tfidf_matrix.pkl', 'rb') as f:
+    tfidf_matrix_kbli = pickle.load(f)
+
+# buat kolom clean untuk matched_words
+df['keterangan_bersih'] = (
+    df['kbli'].fillna('') + ' ' + df['deskripsi'].fillna('')
+).apply(preprocess_text)
+
+print("✅ Model berhasil dimuat")
+
+# ==============================================================
+# ROUTING FLASK
+# ==============================================================
+
+# Page 1: Halaman Utama
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-# Page 2: Serp (Google Search Result Page)
+# Page 2: Hasil Pencarian
 @app.route('/search', methods=['POST'])
 def search():
     user_query = request.form.get('query', '')
     if not user_query.strip():
         return render_template('index.html', error="Input pencarian tidak boleh kosong!")
 
-    # Preproses input pencarian dari user
-    clean_query = preprocess_query(user_query)
+    # Ekstrak angka dari input pengguna sebelum teksnya dibersihkan 
+    extracted_numbers = re.findall(r'\d+', user_query)
+    
+    # Preprocessing kueri (identik dengan notebook)
+    clean_query = preprocess_text(user_query)
     query_words = set(clean_query.split())
-    
-    # Hitung kemiripan
-    tfidf_matrix_query = vectorizer.transform([clean_query])
-    similarity_scores = cosine_similarity(tfidf_matrix_query, tfidf_matrix_kbli).flatten()
-    
+
     df_result = df.copy()
-    df_result['score'] = similarity_scores
     
-    # Ambil 5 teratas
-    top_results = df_result[df_result['score'] > 0].sort_values(by='score', ascending=False).head(8)
-    
-    results = []
-    for idx, row in top_results.iterrows():
-        # Lacak irisan kata menggunakan kolom 'keterangan_bersih'
-        kbli_words = set(str(row['keterangan_bersih']).split())
-        matched_tokens = query_words.intersection(kbli_words)
+    df_result['score_tfidf'] = 0.0
+    df_result['score_kode'] = 0.0
+
+    # Hitung Skor Kemiripan TF-IDF (Teks) 
+    if clean_query.strip():
+        tfidf_matrix_query = vectorizer.transform([clean_query])
+        similarity_scores = cosine_similarity(tfidf_matrix_query, tfidf_matrix_kbli).flatten()
+        df_result['score_tfidf'] = similarity_scores
         
+    # Hitung Skor Pencarian Berdasarkan Kode 
+    if extracted_numbers:
+        for num in extracted_numbers:
+            # Beri skor 1.0 (100%) jika kodenya cocok persis
+            exact_match = df_result['kode'] == num
+            # Beri skor 0.85 (85%) jika kodenya diawali angka tersebut (partial match)
+            partial_match = df_result['kode'].str.startswith(num)
+            
+            df_result.loc[exact_match, 'score_kode'] = 1.0
+            df_result.loc[partial_match & ~exact_match, 'score_kode'] = 0.85
+
+    # Ambil skor tertinggi antara skor Teks dan skor Kode 
+    df_result['score'] = df_result[['score_tfidf', 'score_kode']].max(axis=1)
+    
+    top_results = (
+        df_result[df_result['score'] > 0]
+        .sort_values(by='score', ascending=False)
+        .head(5)
+    )
+
+    results = []
+    for _, row in top_results.iterrows():
+        kbli_words = set(str(row[CLEAN_COL]).split())
+        matched_tokens = query_words.intersection(kbli_words)
+
+        # Menyesuaikan tampilan kata yang cocok (Matched Words) 
+        matched_display = []
+        if row['score_kode'] > 0 and extracted_numbers:
+            matched_display.append(f"Kode: {', '.join(extracted_numbers)}")
+        if matched_tokens:
+            matched_display.append(f"Teks: {', '.join(matched_tokens)}")
+            
+        final_matched_text = ' | '.join(matched_display) if matched_display else 'Tidak ada'
+
         results.append({
             'kode': row['kode'],
-            'judul': row['judul'],
+            'judul': row['kbli'],
             'deskripsi': row['deskripsi'],
             'score': row['score'],
-            'matched_words': ', '.join(matched_tokens) if matched_tokens else 'Tidak ada'
+            'matched_words': final_matched_text,
         })
-    
+
     return render_template('results.html', query=user_query, results=results)
 
-# Page 3: Detail Halaman KBLI saat Link diklik
+# Page 3: Detail KBLI
 @app.route('/kbli/<kode>', methods=['GET'])
 def kbli_detail(kode):
-    # Cari data di dataframe berdasarkan kode yang diklik
-    detail_data = df[df['kode'] == str(kode)]
-    
+    detail_data = df[df['kode'].astype(str).str.zfill(5) == str(kode)]
     if detail_data.empty:
-        abort(404) # Jika kode tidak ditemukan tampilkan error 404
-        
-    # Ambil baris pertama data yang cocok
+        abort(404)
     selected_kbli = detail_data.iloc[0].to_dict()
-    
-    # Jika Anda ingin menampilkan teks bersihnya di detail.html
-    selected_kbli['clean_features'] = selected_kbli.get('keterangan_bersih', '')
-    
+    # Normalisasi key agar template konsisten
+    selected_kbli['judul'] = selected_kbli.get('kbli', selected_kbli.get('judul', ''))
     return render_template('detail.html', kbli=selected_kbli)
 
 if __name__ == '__main__':

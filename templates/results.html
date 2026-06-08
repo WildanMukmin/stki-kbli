@@ -29,11 +29,25 @@
             margin-right: 20px;
         }
 
-        .logo-small span:nth-child(1) { color: #4285F4; }
-        .logo-small span:nth-child(2) { color: #EA4335; }
-        .logo-small span:nth-child(3) { color: #FBBC05; }
-        .logo-small span:nth-child(4) { color: #4285F4; }
-        .logo-small span:nth-child(5) { color: #34A853; }
+        .logo-small span:nth-child(1) {
+            color: #4285F4;
+        }
+
+        .logo-small span:nth-child(2) {
+            color: #EA4335;
+        }
+
+        .logo-small span:nth-child(3) {
+            color: #FBBC05;
+        }
+
+        .logo-small span:nth-child(4) {
+            color: #4285F4;
+        }
+
+        .logo-small span:nth-child(5) {
+            color: #34A853;
+        }
 
         /* Main Layout Flexbox */
         .main-container {
@@ -179,38 +193,45 @@
         /* =========================================
            TAMBAHAN CSS UNTUK VERSI MOBILE/RESPONSIF
            ========================================= */
-        
+
         /* Untuk Tablet dan Layar Kecil (di bawah 1050px) */
         @media screen and (max-width: 1050px) {
             .main-container {
-                flex-direction: column; /* Mengubah susunan menjadi atas-bawah */
-                gap: 40px; /* Mengurangi jarak antar kolom */
+                flex-direction: column;
+                /* Mengubah susunan menjadi atas-bawah */
+                gap: 40px;
+                /* Mengurangi jarak antar kolom */
             }
 
-            .results-column, .sidebar-column {
-                width: 100%; /* Membuat kedua kolom mengisi penuh lebar layar */
+            .results-column,
+            .sidebar-column {
+                width: 100%;
+                /* Membuat kedua kolom mengisi penuh lebar layar */
             }
-            
+
             /* Mengubah urutan: Sidebar Pengetahuan dipindah ke atas Hasil Pencarian (opsional, hapus jika ingin tetap di bawah) */
             .sidebar-column {
-                order: -1; 
+                order: -1;
             }
         }
 
         /* Untuk Smartphone (di bawah 600px) */
         @media screen and (max-width: 600px) {
             body {
-                padding: 15px; /* Mengurangi padding pinggir layar agar konten lebih luas */
+                padding: 15px;
+                /* Mengurangi padding pinggir layar agar konten lebih luas */
             }
 
             .header-search {
-                flex-direction: column; /* Logo dan teks pencarian disusun ke bawah */
+                flex-direction: column;
+                /* Logo dan teks pencarian disusun ke bawah */
                 align-items: flex-start;
                 gap: 10px;
             }
 
             .g-link {
-                font-size: 18px; /* Mengecilkan sedikit judul KBLI */
+                font-size: 18px;
+                /* Mengecilkan sedikit judul KBLI */
             }
         }
     </style>
@@ -278,7 +299,8 @@
                         <li><strong>62012</strong> → Aktivitas spesifik: Pengembangan Aplikasi E-Commerce</li>
                     </ul>
                     <p>
-                        Saat mendaftarkan usaha di <a href="https://oss.go.id/id" target="_blank">OSS</a>, Anda harus memilih kode sampai <strong>5 digit</strong> agar
+                        Saat mendaftarkan usaha di <a href="https://oss.go.id/id" target="_blank">OSS</a>, Anda harus
+                        memilih kode sampai <strong>5 digit</strong> agar
                         jenis usaha dapat dikenali secara tepat.
                     </p>
                 </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +11,22 @@
             line-height: 1.6;
             margin: 0;
             /* Padding diatur agar ada ruang bernapas di pinggir layar */
-            padding: 30px 40px; 
+            padding: 30px 40px;
             background-color: #f8f9fa;
         }
+
         .detail-container {
             /* Membuat container merentang penuh */
             width: 100%;
-            box-sizing: border-box; /* Memastikan padding dalam tidak merusak lebar 100% */
+            box-sizing: border-box;
+            /* Memastikan padding dalam tidak merusak lebar 100% */
             background: #ffffff;
             padding: 40px;
             border-radius: 8px;
             border: 1px solid #dadce0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
         .badge-kode {
             background-color: #4285F4;
             color: white;
@@ -31,6 +35,7 @@
             font-weight: bold;
             font-size: 14px;
         }
+
         h1 {
             color: #202124;
             font-size: 28px;
@@ -39,6 +44,7 @@
             border-bottom: 2px solid #eee;
             padding-bottom: 15px;
         }
+
         .section-title {
             font-size: 16px;
             font-weight: bold;
@@ -46,6 +52,7 @@
             margin-top: 25px;
             margin-bottom: 5px;
         }
+
         .content-box {
             background-color: #f1f3f4;
             padding: 15px;
@@ -54,23 +61,29 @@
             font-size: 15px;
             text-align: justify;
         }
+
         .back-nav {
             margin-top: 30px;
         }
+
         .back-nav a {
             color: #1a0dab;
             text-decoration: none;
             font-size: 15px;
         }
-        .back-nav a:hover { text-decoration: underline; }
+
+        .back-nav a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="detail-container">
         <span class="badge-kode">KBLI KODE {{ kbli.kode }}</span>
         <h1>{{ kbli.judul }}</h1>
-        
+
         <div class="section-title">Deskripsi Cakupan Lapangan Usaha:</div>
         <div class="content-box">
             {{ kbli.deskripsi }}
@@ -87,4 +100,5 @@
     </div>
 
 </body>
+
 </html>
