@@ -115,7 +115,7 @@ def search():
     top_results = (
         df_result[df_result['score'] > 0]
         .sort_values(by='score', ascending=False)
-        .head(5)
+        .head(7)
     )
 
     results = []

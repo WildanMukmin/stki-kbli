@@ -20,6 +20,11 @@
             border-bottom: 1px solid #ebebeb;
             padding-bottom: 20px;
             margin-bottom: 20px;
+            
+            /* --- TAMBAHAN BARU --- */
+            max-width: 1200px; 
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .logo-small {
@@ -29,25 +34,11 @@
             margin-right: 20px;
         }
 
-        .logo-small span:nth-child(1) {
-            color: #4285F4;
-        }
-
-        .logo-small span:nth-child(2) {
-            color: #EA4335;
-        }
-
-        .logo-small span:nth-child(3) {
-            color: #FBBC05;
-        }
-
-        .logo-small span:nth-child(4) {
-            color: #4285F4;
-        }
-
-        .logo-small span:nth-child(5) {
-            color: #34A853;
-        }
+        .logo-small span:nth-child(1) { color: #4285F4; }
+        .logo-small span:nth-child(2) { color: #EA4335; }
+        .logo-small span:nth-child(3) { color: #FBBC05; }
+        .logo-small span:nth-child(4) { color: #4285F4; }
+        .logo-small span:nth-child(5) { color: #34A853; }
 
         /* Main Layout Flexbox */
         .main-container {
@@ -55,6 +46,9 @@
             align-items: flex-start;
             gap: 60px;
             max-width: 1200px;
+            
+            /* --- TAMBAHAN BARU --- */
+            margin: 0 auto; /* Membuat container selalu di tengah saat layar lebar/zoom out */
         }
 
         /* Kolom Kiri: Hasil Pencarian */
@@ -198,20 +192,12 @@
         @media screen and (max-width: 1050px) {
             .main-container {
                 flex-direction: column;
-                /* Mengubah susunan menjadi atas-bawah */
                 gap: 40px;
-                /* Mengurangi jarak antar kolom */
             }
 
             .results-column,
             .sidebar-column {
                 width: 100%;
-                /* Membuat kedua kolom mengisi penuh lebar layar */
-            }
-
-            /* Mengubah urutan: Sidebar Pengetahuan dipindah ke atas Hasil Pencarian (opsional, hapus jika ingin tetap di bawah) */
-            .sidebar-column {
-                order: -1;
             }
         }
 
@@ -219,19 +205,16 @@
         @media screen and (max-width: 600px) {
             body {
                 padding: 15px;
-                /* Mengurangi padding pinggir layar agar konten lebih luas */
             }
 
             .header-search {
                 flex-direction: column;
-                /* Logo dan teks pencarian disusun ke bawah */
                 align-items: flex-start;
                 gap: 10px;
             }
 
             .g-link {
                 font-size: 18px;
-                /* Mengecilkan sedikit judul KBLI */
             }
         }
     </style>
@@ -273,7 +256,9 @@
             </div>
             {% endfor %}
             {% else %}
-            <p style="color: #70757a;">Tidak ada hasil yang cocok. Coba gunakan deskripsi bisnis lain.</p>
+            <p style="color: #70757a">
+                Tidak ada hasil yang cocok. Coba gunakan deskripsi bisnis lain.
+            </p>
             {% endif %}
 
             <br>
