@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,8 @@
             padding: 20px 30px;
             background-color: #ffffff;
         }
+
+        /* Header Search Area */
         .header-search {
             display: flex;
             align-items: center;
@@ -18,33 +21,52 @@
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
+
         .logo-small {
             font-size: 24px;
             font-weight: bold;
             text-decoration: none;
             margin-right: 20px;
         }
+
         .logo-small span:nth-child(1) { color: #4285F4; }
         .logo-small span:nth-child(2) { color: #EA4335; }
         .logo-small span:nth-child(3) { color: #FBBC05; }
         .logo-small span:nth-child(4) { color: #4285F4; }
         .logo-small span:nth-child(5) { color: #34A853; }
-        
+
+        /* Main Layout Flexbox */
+        .main-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 60px;
+            max-width: 1200px;
+        }
+
+        /* Kolom Kiri: Hasil Pencarian */
+        .results-column {
+            width: 652px;
+            flex-shrink: 0;
+        }
+
         .stats-text {
             color: #70757a;
             font-size: 14px;
             margin-bottom: 20px;
         }
+
+        /* Card Hasil Pencarian */
         .g-card {
-            max-width: 652px;
             margin-bottom: 28px;
         }
+
         .g-url {
             font-size: 12px;
             color: #202124;
             margin-bottom: 4px;
             display: block;
         }
+
         .g-link {
             color: #1a0dab;
             font-size: 20px;
@@ -52,14 +74,17 @@
             display: inline-block;
             margin-bottom: 4px;
         }
+
         .g-link:hover {
             text-decoration: underline;
         }
+
         .g-snippet {
             font-size: 14px;
             color: #4d5156;
             line-height: 1.58;
         }
+
         .g-score {
             font-size: 12px;
             color: #137333;
@@ -69,8 +94,128 @@
             margin-left: 8px;
             font-weight: bold;
         }
+
+        /* --- STYLING BARU UNTUK KOLOM KANAN (ACCORDION) --- */
+        .sidebar-column {
+            width: 460px;
+            padding: 0;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            color: #202124;
+            margin-top: 0;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Style untuk Accordion Knowledge Base */
+        .kb-accordion {
+            background-color: #ffffff;
+            border: 1px solid #dfe1e5;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .kb-accordion summary {
+            font-size: 14px;
+            font-weight: bold;
+            color: #202124;
+            padding: 14px 16px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .kb-accordion summary:hover {
+            background-color: #f1f3f4;
+        }
+
+        .kb-accordion summary::after {
+            content: '▼';
+            font-size: 10px;
+            color: #70757a;
+            transition: transform 0.3s ease;
+        }
+
+        .kb-accordion[open] summary::after {
+            transform: rotate(-180deg);
+        }
+
+        .kb-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .kb-content {
+            padding: 16px;
+            font-size: 13px;
+            color: #4d5156;
+            line-height: 1.6;
+            border-top: 1px solid #dfe1e5;
+        }
+
+        .kb-content strong {
+            color: #202124;
+        }
+
+        .kb-content ul {
+            padding-left: 20px;
+            margin-top: 8px;
+            margin-bottom: 0;
+        }
+
+        .kb-content li {
+            margin-bottom: 6px;
+        }
+
+        /* =========================================
+           TAMBAHAN CSS UNTUK VERSI MOBILE/RESPONSIF
+           ========================================= */
+        
+        /* Untuk Tablet dan Layar Kecil (di bawah 1050px) */
+        @media screen and (max-width: 1050px) {
+            .main-container {
+                flex-direction: column; /* Mengubah susunan menjadi atas-bawah */
+                gap: 40px; /* Mengurangi jarak antar kolom */
+            }
+
+            .results-column, .sidebar-column {
+                width: 100%; /* Membuat kedua kolom mengisi penuh lebar layar */
+            }
+            
+            /* Mengubah urutan: Sidebar Pengetahuan dipindah ke atas Hasil Pencarian (opsional, hapus jika ingin tetap di bawah) */
+            .sidebar-column {
+                order: -1; 
+            }
+        }
+
+        /* Untuk Smartphone (di bawah 600px) */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 15px; /* Mengurangi padding pinggir layar agar konten lebih luas */
+            }
+
+            .header-search {
+                flex-direction: column; /* Logo dan teks pencarian disusun ke bawah */
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .g-link {
+                font-size: 18px; /* Mengecilkan sedikit judul KBLI */
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="header-search">
@@ -82,33 +227,107 @@
         </div>
     </div>
 
-    <div class="stats-text">
-        Menemukan {{ results|length }} hasil relevan berdasarkan perhitungan kedekatan teks (STKI).
+    <div class="main-container">
+
+        <div class="results-column">
+            <div class="stats-text">
+                Menemukan {{ results|length }} hasil relevan berdasarkan perhitungan kedekatan teks (STKI).
+            </div>
+
+            {% if results %}
+            {% for row in results %}
+            <div class="g-card">
+                <span class="g-url">KBLI-Find › Kode › {{ row.kode }}</span>
+
+                <a href="/kbli/{{ row.kode }}" class="g-link">
+                    KBLI {{ row.kode }} - {{ row.judul }}
+                </a>
+                <span class="g-score">Sim: {{ (row.score * 100) | round(2) }}%</span>
+
+                <div class="g-snippet">
+                    {{ row.deskripsi[:160] }}...
+                    <br>
+                    <small style="color: #70757a;">Kata Terkait: [{{ row.matched_words }}]</small>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="color: #70757a;">Tidak ada hasil yang cocok. Coba gunakan deskripsi bisnis lain.</p>
+            {% endif %}
+
+            <br>
+            <a href="/" style="color: #1a0dab; text-decoration: none; font-size: 14px;">← Kembali ke Beranda</a>
+        </div>
+
+        <div class="sidebar-column">
+
+            <h3 class="sidebar-title">💡 Pusat Pengetahuan KBLI</h3>
+
+            <details class="kb-accordion" open>
+                <summary>1. Cara Membaca Kode KBLI</summary>
+                <div class="kb-content">
+                    Kode KBLI terdiri dari <strong>5 digit</strong>. Semakin ke belakang digitnya, semakin spesifik
+                    jenis usahanya.
+
+                    <p><strong>Contoh: KBLI 62012</strong></p>
+
+                    <ul>
+                        <li><strong>62</strong> → Bidang besar: Teknologi Informasi</li>
+                        <li><strong>620</strong> → Sub-bidang: Aktivitas Teknologi Informasi</li>
+                        <li><strong>6201</strong> → Jenis usaha: Pemrograman Komputer</li>
+                        <li><strong>62012</strong> → Aktivitas spesifik: Pengembangan Aplikasi E-Commerce</li>
+                    </ul>
+                    <p>
+                        Saat mendaftarkan usaha di <a href="https://oss.go.id/id" target="_blank">OSS</a>, Anda harus memilih kode sampai <strong>5 digit</strong> agar
+                        jenis usaha dapat dikenali secara tepat.
+                    </p>
+                </div>
+            </details>
+
+            <details class="kb-accordion">
+                <summary>2. Cara Memilih KBLI yang Tepat</summary>
+                <div class="kb-content">
+                    Pilih KBLI yang paling sesuai dengan kegiatan usaha yang benar-benar Anda jalankan.
+
+                    <p><strong>Contoh:</strong></p>
+                    <ul>
+                        <li>Membuat website untuk klien → KBLI Jasa Pemrograman Komputer</li>
+                        <li>Menjual pakaian secara online → KBLI Perdagangan Eceran melalui Internet</li>
+                        <li>Membuka kafe → KBLI Penyediaan Makanan dan Minuman</li>
+                    </ul>
+
+                    <p>
+                        Jika usaha Anda memiliki beberapa kegiatan, pilih satu yang menjadi sumber pendapatan utama
+                        sebagai KBLI utama.
+                    </p>
+                </div>
+            </details>
+
+            <details class="kb-accordion">
+                <summary>3. Apakah Bisa Memiliki Banyak KBLI?</summary>
+                <div class="kb-content">
+                    <strong>Bisa.</strong> Satu perusahaan dapat memiliki lebih dari satu KBLI apabila memang
+                    menjalankan beberapa jenis usaha.
+
+                    <p><strong>Contoh:</strong></p>
+
+                    <ul>
+                        <li>Menjual laptop → KBLI Perdagangan Komputer</li>
+                        <li>Membuat software → KBLI Pemrograman Komputer</li>
+                        <li>Menyediakan pelatihan IT → KBLI Pendidikan/Pelatihan</li>
+                    </ul>
+
+                    <p>
+                        Ketiga KBLI tersebut dapat dimiliki oleh satu perusahaan selama kegiatan usahanya benar-benar
+                        dilakukan.
+                    </p>
+                </div>
+            </details>
+
+        </div>
+
     </div>
 
-    {% if results %}
-        {% for row in results %}
-        <div class="g-card">
-            <span class="g-url">KBLI-Find › Kode › {{ row.kode }}</span>
-            
-            <a href="/kbli/{{ row.kode }}" class="g-link">
-                KBLI {{ row.kode }} - {{ row.judul }}
-            </a>
-            <span class="g-score">Sim: {{ (row.score * 100) | round(2) }}%</span>
-            
-            <div class="g-snippet">
-                {{ row.deskripsi[:160] }}... 
-                <br>
-                <small style="color: #70757a;">Kata Terkait: [{{ row.matched_words }}]</small>
-            </div>
-        </div>
-        {% endfor %}
-    {% else %}
-        <p style="color: #70757a;">Tidak ada hasil yang cocok. Coba gunakan deskripsi bisnis lain.</p>
-    {% endif %}
-
-    <br>
-    <a href="/" style="color: #1a0dab; text-decoration: none; font-size: 14px;">← Kembali ke Beranda</a>
-
 </body>
+
 </html>

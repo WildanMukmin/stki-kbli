@@ -9,17 +9,19 @@
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
-            padding: 40px;
+            /* Padding diatur agar ada ruang bernapas di pinggir layar */
+            padding: 30px 40px; 
             background-color: #f8f9fa;
         }
         .detail-container {
-            max-width: 800px;
+            /* Membuat container merentang penuh */
+            width: 100%;
+            box-sizing: border-box; /* Memastikan padding dalam tidak merusak lebar 100% */
             background: #ffffff;
-            padding: 35px;
+            padding: 40px;
             border-radius: 8px;
             border: 1px solid #dadce0;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin: 0 auto;
         }
         .badge-kode {
             background-color: #4285F4;
