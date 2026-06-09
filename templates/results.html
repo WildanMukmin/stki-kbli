@@ -20,8 +20,6 @@
             border-bottom: 1px solid #ebebeb;
             padding-bottom: 20px;
             margin-bottom: 20px;
-            
-            /* --- TAMBAHAN BARU --- */
             max-width: 1200px; 
             margin-left: auto;
             margin-right: auto;
@@ -40,14 +38,68 @@
         .logo-small span:nth-child(4) { color: #4285F4; }
         .logo-small span:nth-child(5) { color: #34A853; }
 
+        /* --- STYLING UNTUK FORM & TOMBOL SEARCH --- */
+        .search-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 652px; /* Disesuaikan dengan lebar kolom hasil pencarian */
+            background: #fff;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px; /* Membuat sudut form melengkung */
+            padding: 5px 6px 5px 20px;
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        /* Efek shadow saat form di-hover atau sedang diketik */
+        .search-form:hover,
+        .search-form:focus-within {
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+            border-color: rgba(223, 225, 229, 0);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            color: #202124;
+            padding: 8px 0;
+            background-color: transparent;
+        }
+
+        /* Perbaikan Tombol Search */
+        .search-button {
+            background-color: #4285F4; /* Warna biru ala Google */
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .search-button:hover {
+            background-color: #3b78e7;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Styling teks query di bawah search bar */
+        .query-text {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            font-size: 16px;
+            color: #202124;
+        }
+
         /* Main Layout Flexbox */
         .main-container {
             display: flex;
             align-items: flex-start;
             gap: 60px;
             max-width: 1200px;
-            
-            /* --- TAMBAHAN BARU --- */
             margin: 0 auto; /* Membuat container selalu di tengah saat layar lebar/zoom out */
         }
 
@@ -105,7 +157,8 @@
 
         /* --- STYLING BARU UNTUK KOLOM KANAN (ACCORDION) --- */
         .sidebar-column {
-            width: 460px;
+            width: 100%;
+            max-width: 500px;
             padding: 0;
         }
 
@@ -213,6 +266,10 @@
                 gap: 10px;
             }
 
+            .search-form {
+                max-width: 100%;
+            }
+
             .g-link {
                 font-size: 18px;
             }
@@ -226,9 +283,15 @@
         <a href="/" class="logo-small">
             <span>K</span><span>B</span><span>L</span><span>I</span><span>-</span><span>S</span>
         </a>
-        <div style="font-size: 16px; color: #202124;">
-            Hasil untuk: <strong>"{{ query }}"</strong>
-        </div>
+        
+        <form action="/search" method="POST" class="search-form">
+            <input type="text" name="query" class="search-input" value="{{ query }}" autocomplete="off" placeholder="Ketik Kode KBLI atau deskripsi..." required>
+            <button type="submit" class="search-button">Cari</button>
+        </form>
+    </div>
+
+    <div class="query-text">
+        Hasil untuk: <strong>"{{ query }}"</strong>
     </div>
 
     <div class="main-container">
